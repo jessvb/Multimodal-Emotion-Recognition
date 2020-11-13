@@ -23,8 +23,6 @@ from imutils import face_utils
 from tensorflow.keras.models import load_model
 from tensorflow.keras import backend as K
 
-# TODO: change the max_time to be the entire video instead of "15"...?? (or maybe 15 is just the frame time??)
-
 ################################################################################
 ############ Change these depending on what you name the recordings ############
 input_video = 'avimaybe.avi'
@@ -44,7 +42,7 @@ input_shape = (shape_x, shape_y, 1)
 nClasses = 7
 
 # Timer until the end of the recording
-end = 0
+curr_frame_num = 0
 
 # Count number of eye blinks (not used in model prediction)
 def eye_aspect_ratio(eye):
@@ -142,11 +140,10 @@ predictor_landmarks  = dlib.shape_predictor("Models/face_landmarks.dat")
 # Prediction vector
 predictions = []
 
-# Timer
-global k
-k = 0
-max_time = 15
-start = time.time()
+# Timer for length of video
+max_frame_num = int(video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
+fps = video_capture.get(cv2.CAP_PROP_FPS)
+frames_btwn = int(fps/3) # measure emotion every 1/3 of a sec
 
 angry_0 = []
 disgust_1 = []
@@ -161,13 +158,14 @@ emotions = []
 face_indices = []
 timestamps = []
 
-# Record for 45 seconds
-while end - start < max_time :
+# Analyze video until the end
+curr_frame_num = 0
+iter_percent = 0 # for printing
+while curr_frame_num < max_frame_num:    
+    # Set the frame to be read
+    video_capture.set(cv2.CAP_PROP_POS_FRAMES, curr_frame_num)
     
-    k = k+1
-    end = time.time()
-    
-    # Capture frame-by-frame the video_capture initiated above
+    # Capture the frame number set above (frame here means image)
     ret, frame = video_capture.read()
     
     # Face index, face by face
@@ -179,8 +177,6 @@ while end - start < max_time :
     # All faces detected
     rects = face_detect(gray, 1)
     
-    #gray, detected_faces, coord = detect_face(frame)
-
     # For each detected face
     for (i, rect) in enumerate(rects):
         
@@ -230,10 +226,24 @@ while end - start < max_time :
         # save results for later
         emotions.append(emotion)
         face_indices.append(face_index)
-        timestamps.append(end) #TODO make sure 'end' is the right thing to save ;P 
-        
+        timestamps.append(curr_frame_num/fps)
+
+    # every so often, show percent done
+    percent_done = curr_frame_num/max_frame_num*100
+    if (percent_done > iter_percent):
+        print('current frame: ' + str(curr_frame_num))
+        print('percent done: ' + str(percent_done))
+        iter_percent += 20
+
+    # increment frame
+    curr_frame_num += frames_btwn
+
 video_capture.release()
 
 # # Export predicted emotions to .csv format
-df = pd.DataFrame({'EMOTION': emotions, 'FACE_INDEX': face_indices, 'TIMESTAMP': timestamps})
+df = pd.DataFrame({'EMOTION': emotions, 'FACE_INDEX': face_indices, 'TIMESTAMP_SEC': timestamps})
 df.to_csv(os.path.join('output', output_name + '_video_emotions.csv'), sep=',', index=False)
+
+print('🎉 Done! 🎉')
+print('See the output file:')
+print('output/' + output_name + '_video_emotions.csv')
