@@ -205,15 +205,6 @@ while end - start < max_time :
         # Make Emotion prediction on the face, outputs probabilities
         prediction = model.predict(face)
         
-        # # TODO del?? # For plotting purposes with Altair
-        # angry_0.append(prediction[0][0].astype(float))
-        # disgust_1.append(prediction[0][1].astype(float))
-        # fear_2.append(prediction[0][2].astype(float))
-        # happy_3.append(prediction[0][3].astype(float))
-        # sad_4.append(prediction[0][4].astype(float))
-        # surprise_5.append(prediction[0][5].astype(float))
-        # neutral_6.append(prediction[0][6].astype(float))
-        
         # Most likely emotion (as an index)
         prediction_result = np.argmax(prediction)
 
@@ -241,142 +232,8 @@ while end - start < max_time :
         face_indices.append(face_index)
         timestamps.append(end) #TODO make sure 'end' is the right thing to save ;P 
         
-        # # Append the emotion to the final list
-        # predictions.append(str(prediction_result))
-        
-        # # Draw rectangle around the face
-        # cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        
-        # # Top left : Put the ID of the face
-        # cv2.putText(frame, "Face #{}".format(i + 1), (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        
-        # # Draw all the landmarks dots
-        # for (j, k) in shape:
-        #     cv2.circle(frame, (j, k), 1, (0, 0, 255), -1)
-    
-        # # Add prediction probabilities on the top-left report
-        # cv2.putText(frame, "----------------",(40,100 + 180*i), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 155, 0)
-        # cv2.putText(frame, "Emotional report : Face #" + str(i+1),(40,120 + 180*i), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 155, 0)
-        # cv2.putText(frame, "Angry : " + str(round(prediction[0][0],3)),(40,140 + 180*i), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 155, 0)
-        # cv2.putText(frame, "Disgust : " + str(round(prediction[0][1],3)),(40,160 + 180*i), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 155, 0)
-        # cv2.putText(frame, "Fear : " + str(round(prediction[0][2],3)),(40,180 + 180*i), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 155, 1)
-        # cv2.putText(frame, "Happy : " + str(round(prediction[0][3],3)),(40,200 + 180*i), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 155, 1)
-        # cv2.putText(frame, "Sad : " + str(round(prediction[0][4],3)),(40,220 + 180*i), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 155, 1)
-        # cv2.putText(frame, "Surprise : " + str(round(prediction[0][5],3)),(40,240 + 180*i), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 155, 1)
-        # cv2.putText(frame, "Neutral : " + str(round(prediction[0][6],3)),(40,260 + 180*i), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 155, 1)
-        
-        # # Annotate main image with the emotion label
-        # if prediction_result == 0 :
-        #     cv2.putText(frame, "Angry",(x+w-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        # elif prediction_result == 1 :
-        #     cv2.putText(frame, "Disgust",(x+w-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        # elif prediction_result == 2 :
-        #     cv2.putText(frame, "Fear",(x+w-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        # elif prediction_result == 3 :
-        #     cv2.putText(frame, "Happy",(x+w-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        # elif prediction_result == 4 :
-        #     cv2.putText(frame, "Sad",(x+w-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        # elif prediction_result == 5 :
-        #     cv2.putText(frame, "Surprise",(x+w-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        # else :
-        #     cv2.putText(frame, "Neutral",(x+w-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        
-        # # Eye Detection and Blink Count
-        # leftEye = shape[lStart:lEnd]
-        # rightEye = shape[rStart:rEnd]
-        
-        # # Compute Eye Aspect Ratio
-        # leftEAR = eye_aspect_ratio(leftEye)
-        # rightEAR = eye_aspect_ratio(rightEye)
-        # ear = (leftEAR + rightEAR) / 2.0
-        
-        # # And plot its contours
-        # leftEyeHull = cv2.convexHull(leftEye)
-        # rightEyeHull = cv2.convexHull(rightEye)
-        # cv2.drawContours(frame, [leftEyeHull], -1, (0, 255, 0), 1)
-        # cv2.drawContours(frame, [rightEyeHull], -1, (0, 255, 0), 1)
-        
-        # # Detect Nose and draw its contours
-        # nose = shape[nStart:nEnd]
-        # noseHull = cv2.convexHull(nose)
-        # cv2.drawContours(frame, [noseHull], -1, (0, 255, 0), 1)
-        
-        # # Detect Mouth and draw its contours
-        # mouth = shape[mStart:mEnd]
-        # mouthHull = cv2.convexHull(mouth)
-        # cv2.drawContours(frame, [mouthHull], -1, (0, 255, 0), 1)
-        
-        # # Detect Jaw and draw its contours
-        # jaw = shape[jStart:jEnd]
-        # jawHull = cv2.convexHull(jaw)
-        # cv2.drawContours(frame, [jawHull], -1, (0, 255, 0), 1)
-        
-        # # Detect Eyebrows and draw its contours
-        # ebr = shape[ebrStart:ebrEnd]
-        # ebrHull = cv2.convexHull(ebr)
-        # cv2.drawContours(frame, [ebrHull], -1, (0, 255, 0), 1)
-
-        # ebl = shape[eblStart:eblEnd]
-        # eblHull = cv2.convexHull(ebl)
-        # cv2.drawContours(frame, [eblHull], -1, (0, 255, 0), 1)
-
-    # # Show number of faces captured
-    # cv2.putText(frame,'Number of Faces : ' + str(len(rects)),(40, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, 155, 1)
-    
-    # # For flask, save image as t.jpg (rewritten at each step)
-    # cv2.imwrite('tmp/t.jpg', frame)
-    
-    # # Yield the image at each step
-    # yield (b'--frame\r\n'
-    #        b'Content-Type: image/jpeg\r\n\r\n' + open('tmp/t.jpg', 'rb').read() + b'\r\n')
-    
-    # # Emotion mapping
-    # #emotion = {0:'Angry', 1:'Disgust', 2:'Fear', 3:'Happy', 4:'Neutral', 5:'Sad', 6:'Surprise'}
-    
-    # # Once reaching the end, write the results to the personal file and to the overall file
-    # if end-start > max_time - 1 :
-    #     with open("static/js/db/histo_perso.txt", "w") as d:
-    #         d.write("density"+'\n')
-    #         for val in predictions :
-    #             d.write(str(val)+'\n')
-            
-    #     with open("static/js/db/histo.txt", "a") as d:
-    #         for val in predictions :
-    #             d.write(str(val)+'\n')
-            
-
-    #     rows = zip(angry_0,disgust_1,fear_2,happy_3,sad_4,surprise_5,neutral_6)
-
-    #     import csv
-    #     with open("static/js/db/prob.csv", "w") as d:
-    #         writer = csv.writer(d)
-    #         for row in rows:
-    #             writer.writerow(row)
-        
-
-    #     with open("static/js/db/prob_tot.csv", "a") as d:
-    #         writer = csv.writer(d)
-    #         for row in rows:
-    #             writer.writerow(row)
-        
-    #     K.clear_session()
-    #     break
-
 video_capture.release()
 
 # # Export predicted emotions to .csv format
 df = pd.DataFrame({'EMOTION': emotions, 'FACE_INDEX': face_indices, 'TIMESTAMP': timestamps})
 df.to_csv(os.path.join('output', output_name + '_video_emotions.csv'), sep=',', index=False)
-
-
-# Clear session to allow user to do another test afterwards
-#K.clear_session()
-
-
-    # d.write(','.join(str(i) for i in angry_0)+'\n')
-    # d.write(','.join(str(i) for i in disgust_1)+'\n')
-    #d.write(','.join(str(i) for i in fear_2)+'\n')
-    # d.write(','.join(str(i) for i in happy_3)+'\n')
-    #  d.write(','.join(str(i) for i in sad_4)+'\n')
-    #  d.write(','.join(str(i) for i in surprise_5)+'\n')
-#  d.write(','.join(str(i) for i in neutral_6)+'\n')
