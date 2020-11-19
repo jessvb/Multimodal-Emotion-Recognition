@@ -231,8 +231,8 @@ while curr_frame_num < max_frame_num:
     # every so often, show percent done
     percent_done = curr_frame_num/max_frame_num*100
     if (percent_done > iter_percent):
-        print('current frame: ' + str(curr_frame_num))
-        print('percent done: ' + str(percent_done))
+        print('current frame: %.0f' % curr_frame_num)
+        print('percent done: %.1f%%' % percent_done)
         iter_percent += 20
 
     # increment frame
